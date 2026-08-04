@@ -1,5 +1,7 @@
 # Despliegue en Azure App Service
 
+> Guia operativa definitiva: ver [DEPLOY_APP_SERVICE_RUNBOOK.md](DEPLOY_APP_SERVICE_RUNBOOK.md).
+
 ## Prerrequisitos
 
 - Visual Studio Code con la extensión **Azure App Service** instalada

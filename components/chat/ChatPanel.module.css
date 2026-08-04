@@ -13,7 +13,9 @@
   border: 1px solid #d9e3ee !important;
   background: #ffffff;
   position: relative;
-  font-family: var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-brand-sans), var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
+  --fontFamilyBase: var(--font-brand-sans), var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
+  --fontFamilyNumeric: var(--font-brand-sans), var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
 }
 
 .wrapper::before {
@@ -112,7 +114,7 @@
   font-size: 10px !important;
   line-height: 14px !important;
   font-weight: 600 !important;
-  font-family: "Segoe UI", "Segoe UI Web (West European)", Roboto, "Helvetica Neue", sans-serif !important;
+  font-family: var(--font-brand-sans), var(--font-geist-sans), "Segoe UI", Roboto, sans-serif !important;
   letter-spacing: 0 !important;
   transition: none !important;
   text-align: center;
@@ -332,17 +334,19 @@
 
 .consentTitle {
   color: #0f3e78;
-  font-size: clamp(20px, 1.9vw, 30px) !important;
-  line-height: 1.2;
-  font-weight: 700 !important;
+  font-size: clamp(18px, 1.25vw, 24px) !important;
+  line-height: 1.18;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em;
 }
 
 .consentText {
   margin: 0;
   max-width: 560px;
   color: #4a668a;
-  font-size: clamp(15px, 1.05vw, 19px);
-  line-height: 1.45;
+  font-size: clamp(13px, 0.86vw, 15px);
+  line-height: 1.42;
+  font-weight: 500;
 }
 
 .consentCheckRow {
@@ -354,8 +358,8 @@
   gap: 12px;
   text-align: left;
   color: #3f5879;
-  font-size: clamp(14px, 1vw, 17px);
-  line-height: 1.4;
+  font-size: clamp(12px, 0.8vw, 14px);
+  line-height: 1.38;
 }
 
 .consentCheckbox {
@@ -399,34 +403,38 @@
 
 .consentStartButton {
   margin-top: 4px;
-  border: 1px solid #f1b9aa;
+  border: 1px solid #2f6ea9;
   border-radius: 999px;
-  min-width: 186px;
-  height: 48px;
-  padding: 0 22px;
-  background: linear-gradient(180deg, #f6b6a5 0%, #f2a792 100%);
+  min-width: 170px;
+  height: 42px;
+  padding: 0 20px;
+  background: linear-gradient(180deg, #2f77b9 0%, #1d5f98 100%);
   color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
-  font-size: 15px !important;
-  font-weight: 600;
+  font-family: var(--font-brand-sans), var(--font-geist-sans), "Segoe UI", Roboto, sans-serif;
+  font-size: 13px !important;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(241, 155, 132, 0.24);
-  transition: transform 0.12s ease, filter 0.12s ease;
+  box-shadow: 0 8px 14px rgba(24, 74, 120, 0.26);
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
 }
 
 .consentStartButton:hover:not(:disabled) {
-  filter: brightness(1.03);
+  filter: brightness(1.04);
   transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(18, 63, 104, 0.3);
 }
 
 .consentStartButton:disabled {
-  opacity: 0.5;
+  opacity: 1;
   cursor: not-allowed;
+  background: linear-gradient(180deg, #dbe5f0 0%, #cfd9e6 100%);
+  border-color: #bcc9d9;
+  color: #768aa4;
   box-shadow: none;
 }
 
@@ -522,17 +530,17 @@
   }
 
   .consentText {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .consentCheckRow {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .consentStartButton {
-    min-width: 174px;
-    height: 44px;
-    font-size: 14px !important;
+    min-width: 162px;
+    height: 40px;
+    font-size: 13px !important;
   }
 }
 
