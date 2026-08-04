@@ -42,7 +42,7 @@ export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
         disabled={disabled}
         resize="none"
         rows={2}
-        aria-label="Escribe un mensaje para el agente"
+        aria-label="Escribe un mensaje para Marea"
         className={styles.input}
         style={{ gridColumn: "1 / 2", gridRow: "2" }}
       />

@@ -45,6 +45,15 @@ export const showCabinSelectorActivityValueSchema = z.object({
   cabinId: z.string().min(1),
 });
 
+/**
+ * Schema para validar el campo `value` de la actividad DirectLine
+ * event / name === "ui.showQuickOptions".
+ */
+export const showQuickOptionsActivityValueSchema = z.object({
+  title: z.string().min(1).optional(),
+  options: z.array(z.string().min(1)).min(1).max(8),
+});
+
 export const agentToUiEventSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("ui.showDatePicker"),
@@ -74,6 +83,10 @@ export const agentToUiEventSchema = z.discriminatedUnion("type", [
         .max(MAX_AGENT_MESSAGE_LENGTH)
         .refine(noHtml, "Agent messages cannot contain HTML."),
     }),
+  }),
+  z.object({
+    type: z.literal("ui.showQuickOptions"),
+    payload: showQuickOptionsActivityValueSchema,
   }),
   z.object({
     type: z.literal("ui.showTravelPartySelector"),
@@ -119,3 +132,4 @@ export type UiToAgentEventSchema = z.infer<typeof uiToAgentEventSchema>;
 export type ShowDatePickerActivityValue = z.infer<typeof showDatePickerActivityValueSchema>;
 export type ShowTravelPartySelectorActivityValue = z.infer<typeof showTravelPartySelectorActivityValueSchema>;
 export type ShowCabinSelectorActivityValue = z.infer<typeof showCabinSelectorActivityValueSchema>;
+export type ShowQuickOptionsActivityValue = z.infer<typeof showQuickOptionsActivityValueSchema>;

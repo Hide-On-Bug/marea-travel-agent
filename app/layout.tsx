@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nauta de reservas",
+  title: "Marea",
   description: "POC de agencia de viajes con agente de IA y UI rica",
 };
 

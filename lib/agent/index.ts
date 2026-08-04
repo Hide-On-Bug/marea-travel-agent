@@ -10,6 +10,7 @@ export type {
   UiToAgentEvent,
   ChatMessageModel,
   FlightOption,
+  ShowQuickOptionsPayload,
   ShowTravelPartySelectorPayload,
 } from "./eventTypes";
 export { agentToUiEventSchema, uiToAgentEventSchema } from "./eventSchemas";

@@ -1,11 +1,11 @@
 .message {
   max-width: 80%;
-  border-radius: 16px;
-  padding: 11px 14px;
-  box-shadow: 0 3px 10px rgba(20, 35, 55, 0.06);
+  border-radius: 20px;
+  padding: 10px 14px;
+  box-shadow: 0 3px 8px rgba(15, 43, 72, 0.07);
   line-height: 1.45;
   word-break: break-word;
-  animation: bubbleIn 0.26s ease-out;
+  animation: bubbleIn 0.22s ease-out;
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
@@ -16,11 +16,11 @@
 
 .role {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   opacity: 0.7;
 }
 
@@ -66,10 +66,10 @@
 /* User bubble - navy Trasmed */
 .user {
   margin-left: auto;
-  background: linear-gradient(165deg, #4e8ec9 0%, #2f6fb0 78%);
+  background: linear-gradient(180deg, #0f5fa8 0%, #0b5394 100%);
   color: #ffffff;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 7px 16px rgba(47, 111, 176, 0.22);
+  border-bottom-right-radius: 8px;
+  box-shadow: 0 7px 14px rgba(11, 83, 148, 0.24);
 }
 
 .user .role {
@@ -84,28 +84,28 @@
 .agent {
   margin-right: auto;
   background: #ffffff;
-  border: 1px solid rgba(21, 36, 57, 0.1);
-  color: #1c2b42;
-  border-bottom-left-radius: 4px;
+  border: 1px solid #d8e2ed;
+  color: #1f3550;
+  border-bottom-left-radius: 8px;
 }
 
 .agent:hover {
-  border-color: rgba(60, 111, 170, 0.3);
-  box-shadow: 0 6px 14px rgba(20, 35, 55, 0.1);
+  border-color: #bfd1e6;
+  box-shadow: 0 5px 12px rgba(19, 52, 85, 0.1);
 }
 
 .agent .role {
-  color: #4f6f93;
+  color: #40658d;
 }
 
 /* System bubble - compact structured confirmation */
 .system {
   align-self: flex-end;
   margin-left: auto;
-  background: linear-gradient(180deg, #eff5fc, #e8f0fb);
-  border: 1px solid #c8d9ec;
-  color: #264867;
-  border-radius: 12px;
+  background: #eef4fb;
+  border: 1px solid #cfe0f2;
+  color: #244867;
+  border-radius: 14px;
   font-size: 12px;
   padding: 8px 11px;
   box-shadow: none;

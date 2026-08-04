@@ -30,6 +30,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# local deployment artifacts
+*.zip
+webapp-logs/
+webapp-logs-latest/
+webapp-logs-latest2/
+.azure-standalone/
+
 # env files (can opt-in for committing if needed)
 .env*
 

@@ -255,7 +255,7 @@ export class DirectLineTransport implements AgentTransport {
     if (activityName === "ui.cabinSelected") {
       console.debug("[ui.cabinSelected]", {
         type: activity.type,
-        name: activity.name,
+        name: activityName,
         value: event.payload,
       });
     }

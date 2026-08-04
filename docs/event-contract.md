@@ -44,6 +44,20 @@ Definir un contrato cerrado entre UI y agente para un transporte simulado.
 }
 ```
 
+### ui.showQuickOptions
+```json
+{
+  "type": "ui.showQuickOptions",
+  "payload": {
+    "title": "Selecciona una opcion",
+    "options": [
+      "Quiero reservar ida y vuelta",
+      "Tengo una reserva y quiero consultarla"
+    ]
+  }
+}
+```
+
 ## UI -> Agente
 
 ### ui.datesSelected

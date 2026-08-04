@@ -2,6 +2,7 @@ export type AgentToUiEventType =
   | "ui.showDatePicker"
   | "ui.showFlights"
   | "ui.showMessage"
+  | "ui.showQuickOptions"
   | "ui.showTravelPartySelector"
   | "ui.showCabinSelector";
 
@@ -42,6 +43,11 @@ export interface ShowMessagePayload {
   text: string;
 }
 
+export interface ShowQuickOptionsPayload {
+  title?: string;
+  options: string[];
+}
+
 export interface ShowTravelPartySelectorPayload {
   minPassengers: number;
   maxPassengers: number;
@@ -75,6 +81,7 @@ export type AgentToUiEvent =
   | { type: "ui.showDatePicker"; payload: ShowDatePickerPayload }
   | { type: "ui.showFlights"; payload: ShowFlightsPayload }
   | { type: "ui.showMessage"; payload: ShowMessagePayload }
+  | { type: "ui.showQuickOptions"; payload: ShowQuickOptionsPayload }
   | { type: "ui.showTravelPartySelector"; payload: ShowTravelPartySelectorPayload }
   | { type: "ui.showCabinSelector"; payload: ShowCabinSelectorPayload };
 

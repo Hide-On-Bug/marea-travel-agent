@@ -4,6 +4,7 @@ import {
   showDatePickerActivityValueSchema,
   showTravelPartySelectorActivityValueSchema,
   showCabinSelectorActivityValueSchema,
+  showQuickOptionsActivityValueSchema,
 } from "@/lib/agent/eventSchemas";
 
 const MAX_AGENT_MESSAGE_LENGTH = 4000;
@@ -159,6 +160,24 @@ export const mapDirectLineEventActivityToAgentEvent = (
       console.log("[directLineAdapters] ui.showCabinSelector validated:", parsed.data);
     }
     return { type: "ui.showCabinSelector", payload: parsed.data };
+  }
+
+  if (eventName === "ui.showQuickOptions") {
+    const rawValue = parseActivityValue(activity.value);
+    if (rawValue === undefined) return null;
+    const parsed = showQuickOptionsActivityValueSchema.safeParse(rawValue);
+    if (!parsed.success) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[directLineAdapters] ui.showQuickOptions validation failed", {
+          issues: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
+        });
+      }
+      return null;
+    }
+    if (process.env.NODE_ENV === "development") {
+      console.log("[directLineAdapters] ui.showQuickOptions validated:", parsed.data);
+    }
+    return { type: "ui.showQuickOptions", payload: parsed.data };
   }
 
   if (process.env.NODE_ENV === "development") {
