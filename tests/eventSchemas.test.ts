@@ -34,6 +34,49 @@ describe("eventSchemas", () => {
     expect(() => agentToUiEventSchema.parse(event)).not.toThrow();
   });
 
+  it("accepts a valid ui.showCars event", () => {
+    const event = {
+      type: "ui.showCars",
+      payload: {
+        destination: "Ibiza",
+        days: 5,
+        title: "Te muestro opciones de coche para 5 dias en Ibiza",
+        cars: [
+          {
+            id: "car-economico",
+            name: "Fiat 500 o similar",
+            category: "Economico",
+            transmission: "Manual",
+            pricePerDayEur: 45,
+          },
+        ],
+      },
+    };
+
+    expect(() => agentToUiEventSchema.parse(event)).not.toThrow();
+  });
+
+  it("accepts a valid ui.showHotels event", () => {
+    const event = {
+      type: "ui.showHotels",
+      payload: {
+        destination: "Ibiza",
+        nights: 7,
+        title: "Te muestro 2 opciones de hotel para 7 noches en Ibiza",
+        hotels: [
+          {
+            id: "mar-blau-double-sea",
+            hotelName: "Hotel Mar Blau Ibiza",
+            roomName: "Habitacion doble vista mar",
+            nightPriceEur: 139,
+          },
+        ],
+      },
+    };
+
+    expect(() => agentToUiEventSchema.parse(event)).not.toThrow();
+  });
+
   it("rejects HTML in ui.showMessage", () => {
     const event = {
       type: "ui.showMessage",
@@ -291,6 +334,24 @@ describe("eventSchemas", () => {
           currency: "EUR",
           petFriendly: true,
         },
+      };
+      expect(() => uiToAgentEventSchema.parse(event)).toThrow();
+    });
+  });
+
+  describe("uiToAgentEventSchema — ui.hotelSelected", () => {
+    it("accepts a valid hotelSelected event", () => {
+      const event = {
+        type: "ui.hotelSelected",
+        payload: "Destino: Ibiza. Hotel: Mar Blau. Habitacion: Doble.",
+      };
+      expect(() => uiToAgentEventSchema.parse(event)).not.toThrow();
+    });
+
+    it("rejects hotelSelected with an empty summary", () => {
+      const event = {
+        type: "ui.hotelSelected",
+        payload: "",
       };
       expect(() => uiToAgentEventSchema.parse(event)).toThrow();
     });

@@ -41,6 +41,30 @@ export const petFriendlyCabin: Cabin = {
   ],
 };
 
+export const standardExteriorCabin: Cabin = {
+  id: "exterior-standard",
+  name: "Camarote exterior",
+  capacity: 4,
+  deck: 8,
+  beds: "2 camas individuales",
+  priceDelta: 75,
+  petFriendly: false,
+  availability: 2,
+  tags: ["Exterior", "Disponibilidad alta"],
+  features: [
+    "Ventana al mar",
+    "Baño privado",
+    "Climatización",
+    "Zona tranquila",
+  ],
+  images: [
+    { src: "/images/cabins/exterior-pet-friendly/01-dormitorio.png", alt: "Dormitorio del camarote" },
+    { src: "/images/cabins/exterior-pet-friendly/02-ventana.png",    alt: "Ventana al mar" },
+    { src: "/images/cabins/exterior-pet-friendly/03-bano.png",       alt: "Baño privado" },
+  ],
+};
+
 export const cabinCatalog: Record<string, Cabin> = {
+  "exterior-standard": standardExteriorCabin,
   "exterior-pet-friendly": petFriendlyCabin,
 };

@@ -1,57 +1,206 @@
-.button {
-  border: 0;
-  background: transparent;
-  min-width: 255px;
-  text-align: left;
-  cursor: pointer;
-}
-
 .card {
   display: grid;
-  gap: 8px;
+  gap: 14px;
   height: 100%;
-  border-radius: 12px !important;
-  border: 1px solid rgba(22, 35, 58, 0.11) !important;
-  box-shadow: 0 4px 12px rgba(20, 35, 55, 0.07) !important;
-  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
-  position: relative;
+  min-height: 470px;
+  border-radius: 14px;
+  border: 1px solid rgba(22, 35, 58, 0.1);
+  box-shadow: 0 8px 18px rgba(20, 35, 55, 0.09);
   overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  animation: fadeSlideIn 0.25s ease-out;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 
-.card::before {
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(20, 35, 55, 0.12);
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 16px 16px 52px;
+  min-height: 235px;
+  color: #ffffff;
+  background: #0d3d69;
+}
+
+.hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 30%, rgba(201, 224, 247, 0.34) 50%, transparent 70%);
-  transform: translateX(-105%);
-  transition: transform 0.5s ease;
+  background: linear-gradient(170deg, rgba(3, 21, 39, 0.2), rgba(2, 24, 45, 0.65));
 }
 
-.button:hover .card {
-  transform: translateY(-2px);
-  border-color: rgba(47, 111, 176, 0.35) !important;
-  box-shadow: 0 8px 16px rgba(20, 35, 55, 0.1) !important;
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 44px;
+  background: linear-gradient(180deg, transparent 0%, rgba(1, 16, 32, 0.5) 100%);
 }
 
-.button:hover .card::before {
-  transform: translateX(110%);
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-.button:focus-visible .card {
-  outline: 2px solid #6ea2d3;
-  outline-offset: 1px;
+.heroTextBlock {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 3px;
 }
 
-.selected .card {
-  border: 2px solid #3d7fbe !important;
-  box-shadow: 0 10px 20px rgba(47, 111, 176, 0.2) !important;
+.heroEyebrow {
+  color: rgba(240, 247, 255, 0.86) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  font-size: 11px !important;
+}
+
+.heroRoute {
+  color: #f9fcff !important;
+  font-size: 22px !important;
+  letter-spacing: 0.01em;
+}
+
+.availabilityPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  background: #f1f6fc;
+  border-radius: 8px;
+  border-left: 3px solid #79aad8;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.availabilityItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #2b4e73;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.availabilityIcon {
+  color: #4b87c2;
+  flex-shrink: 0;
+}
+
+.availabilityWarn {
+  color: #7a4a00;
+}
+
+.availabilityWarnIcon {
+  color: #f5a000;
+  flex-shrink: 0;
+}
+
+.availabilitySeats {
+  color: #d84f2f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.availabilityFare {
+  color: #173e69;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.info {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.name {
+  font-size: 18px !important;
+  color: #1f3048;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #4f6782;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: #f6f9fd;
+  border-top: 1px solid rgba(22, 35, 58, 0.07);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.priceLabel {
+  display: block;
+  color: #70839c;
+  font-size: 13px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+  margin-bottom: 8px;
+}
+
+.price {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f3048;
+}
+
+.priceHint {
+  display: block;
+  margin-top: 2px;
+  color: #5d738f;
+  font-size: 12px !important;
+}
+
+.selectBtn {
+  white-space: nowrap;
+  border-radius: 10px !important;
+}
+
+.selected {
+  border: 2px solid #3d7fbe;
+  box-shadow: 0 10px 20px rgba(47, 111, 176, 0.2);
+}
+
+.selectedBadgeWrap {
+  padding: 0 16px 14px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .card::before {
+  .selectBtn {
+    animation: none !important;
     transition: none !important;
+    transform: none !important;
   }
 }

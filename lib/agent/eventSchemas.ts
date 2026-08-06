@@ -54,6 +54,63 @@ export const showQuickOptionsActivityValueSchema = z.object({
   options: z.array(z.string().min(1)).min(1).max(8),
 });
 
+/**
+ * Schema para validar el campo `value` de la actividad DirectLine
+ * event / name === "ui.showFlights".
+ */
+export const showFlightsActivityValueSchema = z.object({
+  destination: z.string().min(1),
+  fromDate: z.string().date(),
+  toDate: z.string().date(),
+  flights: z.array(flightOptionSchema).min(1),
+});
+
+export const carOptionSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  category: z.string().min(1),
+  transmission: z.string().min(1),
+  pricePerDayEur: z.number().positive(),
+  imageSrc: z.string().min(1).optional(),
+  imageAlt: z.string().min(1).optional(),
+  seats: z.number().int().min(1).optional(),
+  fuel: z.enum(["Gasolina", "Hibrido", "Electrico"]).optional(),
+  luggage: z.number().int().min(0).optional(),
+  petFriendly: z.boolean().optional(),
+  tags: z.array(z.string().min(1)).optional(),
+});
+
+export const showCarsActivityValueSchema = z.object({
+  destination: z.string().min(1),
+  days: z.number().int().min(1),
+  title: z.string().min(1).optional(),
+  cars: z.array(carOptionSchema).min(1),
+});
+
+export const hotelOptionSchema = z.object({
+  id: z.string().min(1),
+  hotelName: z.string().min(1),
+  roomName: z.string().min(1),
+  stars: z.number().int().min(1).max(5).optional(),
+  board: z.enum(["Alojamiento", "Desayuno incluido"]).optional(),
+  cancellation: z.enum(["Flexible", "No reembolsable"]).optional(),
+  nightPriceEur: z.number().positive(),
+  image: z.object({
+    src: z.string().min(1),
+    alt: z.string().min(1),
+  }).optional(),
+  tags: z.array(z.string().min(1)).optional(),
+  features: z.array(z.string().min(1)).optional(),
+  description: z.string().min(1).optional(),
+});
+
+export const showHotelsActivityValueSchema = z.object({
+  destination: z.string().min(1),
+  nights: z.number().int().min(1),
+  title: z.string().min(1).optional(),
+  hotels: z.array(hotelOptionSchema).min(1),
+});
+
 export const agentToUiEventSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("ui.showDatePicker"),
@@ -73,6 +130,14 @@ export const agentToUiEventSchema = z.discriminatedUnion("type", [
       toDate: z.string().date(),
       flights: z.array(flightOptionSchema).min(1),
     }),
+  }),
+  z.object({
+    type: z.literal("ui.showCars"),
+    payload: showCarsActivityValueSchema,
+  }),
+  z.object({
+    type: z.literal("ui.showHotels"),
+    payload: showHotelsActivityValueSchema,
   }),
   z.object({
     type: z.literal("ui.showMessage"),
@@ -125,6 +190,10 @@ export const uiToAgentEventSchema = z.discriminatedUnion("type", [
     type: z.literal("ui.cabinSelected"),
     payload: z.string().min(1),
   }),
+  z.object({
+    type: z.literal("ui.hotelSelected"),
+    payload: z.string().min(1),
+  }),
 ]);
 
 export type AgentToUiEventSchema = z.infer<typeof agentToUiEventSchema>;
@@ -133,3 +202,6 @@ export type ShowDatePickerActivityValue = z.infer<typeof showDatePickerActivityV
 export type ShowTravelPartySelectorActivityValue = z.infer<typeof showTravelPartySelectorActivityValueSchema>;
 export type ShowCabinSelectorActivityValue = z.infer<typeof showCabinSelectorActivityValueSchema>;
 export type ShowQuickOptionsActivityValue = z.infer<typeof showQuickOptionsActivityValueSchema>;
+export type ShowFlightsActivityValue = z.infer<typeof showFlightsActivityValueSchema>;
+export type ShowCarsActivityValue = z.infer<typeof showCarsActivityValueSchema>;
+export type ShowHotelsActivityValue = z.infer<typeof showHotelsActivityValueSchema>;

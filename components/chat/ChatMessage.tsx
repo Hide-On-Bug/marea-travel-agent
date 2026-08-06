@@ -11,7 +11,7 @@ interface ChatMessageProps {
 export function ChatMessage({ message }: ChatMessageProps) {
   const roleLabel =
     message.role === "user"
-      ? "Tú"
+      ? "TU"
       : message.role === "agent"
         ? "Marea"
         : "Sistema";

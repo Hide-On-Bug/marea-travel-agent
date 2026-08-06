@@ -56,8 +56,20 @@
 }
 
 .sendButton {
-  min-width: 116px;
-  border-radius: 999px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  inline-size: 44px !important;
+  block-size: 44px !important;
+  aspect-ratio: 1 / 1;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #0b5394 !important;
   background: linear-gradient(180deg, #1569b4, #0b5394) !important;
   color: #ffffff !important;

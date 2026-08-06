@@ -128,6 +128,193 @@ describe("directLineAdapters", () => {
       expect(mapDirectLineEventActivityToAgentEvent(activity)).toBeNull();
     });
 
+    it("maps a valid ui.showFlights event activity", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showFlights",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          fromDate: "2026-08-31",
+          toDate: "2026-08-31",
+          flights: [
+            {
+              id: "TR-001",
+              airline: "Trasmed",
+              origin: "Valencia",
+              destination: "Ibiza",
+              departureTime: "09:00",
+              arrivalTime: "14:10",
+              duration: "5h 10m",
+              stops: 0,
+              priceEur: 79,
+            },
+          ],
+        },
+      };
+
+      const result = mapDirectLineEventActivityToAgentEvent(activity);
+      expect(result).toEqual({
+        type: "ui.showFlights",
+        payload: {
+          destination: "Ibiza",
+          fromDate: "2026-08-31",
+          toDate: "2026-08-31",
+          flights: [
+            {
+              id: "TR-001",
+              airline: "Trasmed",
+              origin: "Valencia",
+              destination: "Ibiza",
+              departureTime: "09:00",
+              arrivalTime: "14:10",
+              duration: "5h 10m",
+              stops: 0,
+              priceEur: 79,
+            },
+          ],
+        },
+      });
+    });
+
+    it("maps a valid ui.showcars event activity", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showCars",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          days: 5,
+          title: "Te muestro opciones de coche para 5 dias en Ibiza",
+          cars: [
+            {
+              id: "car-economico",
+              name: "Fiat 500 o similar",
+              category: "Economico",
+              transmission: "Manual",
+              pricePerDayEur: 45,
+            },
+          ],
+        },
+      };
+
+      const result = mapDirectLineEventActivityToAgentEvent(activity);
+      expect(result).toEqual({
+        type: "ui.showCars",
+        payload: {
+          destination: "Ibiza",
+          days: 5,
+          title: "Te muestro opciones de coche para 5 dias en Ibiza",
+          cars: [
+            {
+              id: "car-economico",
+              name: "Fiat 500 o similar",
+              category: "Economico",
+              transmission: "Manual",
+              pricePerDayEur: 45,
+            },
+          ],
+        },
+      });
+    });
+
+    it("returns null for showFlights with invalid payload", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showFlights",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          fromDate: "31-08-2026",
+          toDate: "31-08-2026",
+          flights: [],
+        },
+      };
+
+      expect(mapDirectLineEventActivityToAgentEvent(activity)).toBeNull();
+    });
+
+    it("returns null for showcars with invalid payload", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showCars",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          days: 0,
+          cars: [],
+        },
+      };
+
+      expect(mapDirectLineEventActivityToAgentEvent(activity)).toBeNull();
+    });
+
+    it("maps a valid ui.showhotels event activity", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showhotels",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          nights: 7,
+          title: "Te muestro 2 opciones de hotel para 7 noches en Ibiza",
+          hotels: [
+            {
+              id: "mar-blau-double-sea",
+              hotelName: "Hotel Mar Blau Ibiza",
+              roomName: "Habitacion doble vista mar",
+              nightPriceEur: 139,
+            },
+            {
+              id: "port-ibiza-junior-suite",
+              hotelName: "Port Ibiza Suites",
+              roomName: "Junior suite familiar",
+              nightPriceEur: 168,
+            },
+          ],
+        },
+      };
+
+      const result = mapDirectLineEventActivityToAgentEvent(activity);
+      expect(result).toEqual({
+        type: "ui.showHotels",
+        payload: {
+          destination: "Ibiza",
+          nights: 7,
+          title: "Te muestro 2 opciones de hotel para 7 noches en Ibiza",
+          hotels: [
+            {
+              id: "mar-blau-double-sea",
+              hotelName: "Hotel Mar Blau Ibiza",
+              roomName: "Habitacion doble vista mar",
+              nightPriceEur: 139,
+            },
+            {
+              id: "port-ibiza-junior-suite",
+              hotelName: "Port Ibiza Suites",
+              roomName: "Junior suite familiar",
+              nightPriceEur: 168,
+            },
+          ],
+        },
+      });
+    });
+
+    it("returns null for showhotels with invalid payload", () => {
+      const activity: Activity = {
+        type: "event",
+        name: "ui.showhotels",
+        from: { id: "nauta-bot", role: "bot" },
+        value: {
+          destination: "Ibiza",
+          nights: 0,
+          hotels: [],
+        },
+      };
+
+      expect(mapDirectLineEventActivityToAgentEvent(activity)).toBeNull();
+    });
+
     it("returns null for unknown event names", () => {
       const activity: Activity = {
         type: "event",

@@ -148,7 +148,9 @@ export function ChatPanel({ messages, isBusy, inputDisabled, onSendMessage, cons
       >
         {messages.length === 0 && (
           <div className={styles.emptyState}>
-            <span className={styles.emptyIcon}>⚓</span>
+            <span className={styles.emptyIcon}>
+              <MareaWaveIcon />
+            </span>
             <Body1Strong className={styles.emptyText}>
               ¡Hola! Soy Marea.
             </Body1Strong>

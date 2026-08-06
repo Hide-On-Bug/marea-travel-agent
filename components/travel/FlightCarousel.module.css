@@ -11,23 +11,22 @@
 
 .list {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(255px, 290px);
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  scrollbar-width: thin;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
 }
 
-.list::-webkit-scrollbar {
-  height: 7px;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
 }
 
-.list::-webkit-scrollbar-thumb {
-  background: rgba(30, 50, 75, 0.2);
-  border-radius: 999px;
+.headerIcon {
+  color: #4b87c2;
 }
 
-.list::-webkit-scrollbar-thumb:hover {
-  background: rgba(47, 111, 176, 0.35);
+.headerText {
+  color: #1f3048;
+  font-weight: 600;
 }

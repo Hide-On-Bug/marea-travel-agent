@@ -236,6 +236,10 @@ export class DirectLineTransport implements AgentTransport {
         activityName = "ui.cabinSelected";
         activityValue = event.payload;
         break;
+      case "ui.hotelSelected":
+        activityName = "ui.hotelSelected";
+        activityValue = event.payload;
+        break;
       default:
         return;
     }

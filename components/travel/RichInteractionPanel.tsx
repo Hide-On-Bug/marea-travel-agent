@@ -13,6 +13,7 @@ interface RichInteractionPanelProps {
   showDatePicker: boolean;
   dateRange: DateRange | undefined;
   flights: FlightOption[];
+  passengers?: number;
   selectedFlightId?: string;
   isLoading: boolean;
   error: string | null;
@@ -27,6 +28,7 @@ export function RichInteractionPanel({
   showDatePicker,
   dateRange,
   flights,
+  passengers = 2,
   selectedFlightId,
   isLoading,
   error,
@@ -70,6 +72,7 @@ export function RichInteractionPanel({
           flights={flights}
           selectedFlightId={selectedFlightId}
           onSelectFlight={onSelectFlight}
+          passengers={passengers}
         />
       )}
 

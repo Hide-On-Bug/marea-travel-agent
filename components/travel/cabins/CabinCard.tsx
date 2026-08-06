@@ -21,14 +21,26 @@ interface CabinCardProps {
 }
 
 export function CabinCard({ cabin, passengers, hasPets, onSelect, disabled = false }: CabinCardProps) {
+  const displayName = hasPets
+    ? cabin.name
+    : cabin.name.replace(/\s*pet friendly/gi, "").trim();
+
+  const visibleTags = hasPets
+    ? cabin.tags
+    : cabin.tags.filter((tag) => !/pet\s*friendly/i.test(tag));
+
+  const visibleFeatures = hasPets
+    ? cabin.features
+    : cabin.features.filter((feature) => !/(mascot|pet\s*friendly)/i.test(feature));
+
   return (
-    <article className={styles.card} aria-label={`Camarote: ${cabin.name}`}>
+    <article className={styles.card} aria-label={`Camarote: ${displayName}`}>
       {/* Gallery */}
       <CabinGallery images={cabin.images} />
 
       {/* Tags */}
       <div className={styles.tags}>
-        {cabin.tags.map((tag) => (
+        {visibleTags.map((tag) => (
           <Badge
             key={tag}
             appearance="filled"
@@ -42,7 +54,7 @@ export function CabinCard({ cabin, passengers, hasPets, onSelect, disabled = fal
 
       {/* Info */}
       <div className={styles.info}>
-        <Body1Strong className={styles.name}>{cabin.name}</Body1Strong>
+        <Body1Strong className={styles.name}>{displayName}</Body1Strong>
 
         <div className={styles.meta}>
           <span className={styles.metaItem}>
@@ -59,7 +71,7 @@ export function CabinCard({ cabin, passengers, hasPets, onSelect, disabled = fal
         <div className={styles.contextBadges}>
           <span className={styles.contextItem}>
             <CheckmarkCircle20Regular className={styles.contextIcon} />
-            Disponible para {passengers} {passengers === 1 ? "pasajero" : "pasajeros"}
+            Disponible para 2 pasajeros
           </span>
           {hasPets && (
             <span className={styles.contextItem}>
@@ -77,7 +89,7 @@ export function CabinCard({ cabin, passengers, hasPets, onSelect, disabled = fal
 
         {/* Features */}
         <ul className={styles.features} aria-label="Características">
-          {cabin.features.map((f) => (
+          {visibleFeatures.map((f) => (
             <li key={f} className={styles.feature}>
               <span className={styles.featureDot} aria-hidden="true" />
               {f}

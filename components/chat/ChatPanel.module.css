@@ -240,9 +240,8 @@
 }
 
 .emptyIcon {
-  font-size: 36px;
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -253,6 +252,13 @@
   animation: none;
 }
 
+.emptyIcon img {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: contain;
+}
+
 @keyframes iconFloat {
   0%,
   100% { transform: translateY(0); }
@@ -260,14 +266,14 @@
 }
 
 .emptyText {
-  color: #1d2d45;
+  color: #0f3e78 !important;
   font-size: 15px !important;
   line-height: 1.35;
 }
 
 .emptySub {
   font-size: 13px;
-  color: #6f7f95;
+  color: #4d6f99 !important;
 }
 
 .starterPrompts {
@@ -280,22 +286,23 @@
 }
 
 .starterPromptButton {
-  border: 1.5px solid #63c9da;
-  background: #ffffff;
-  color: #1a9cab;
+  border: 2px solid #2f4f8f;
+  background: transparent;
+  color: #1d417d;
   border-radius: 999px;
   padding: 10px 18px;
   font-size: 13px;
   line-height: 1.25;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-  transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+  box-shadow: none;
+  transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .starterPromptButton:hover:not(:disabled) {
-  border-color: #40bfd2;
-  background: #f3feff;
+  border-color: #25447f;
+  background: rgba(47, 79, 143, 0.12);
+  color: #13376a;
   transform: translateY(-1px);
 }
 
@@ -403,13 +410,13 @@
 
 .consentStartButton {
   margin-top: 4px;
-  border: 1px solid #2f6ea9;
+  border: 2px solid #2f4f8f;
   border-radius: 999px;
   min-width: 170px;
   height: 42px;
   padding: 0 20px;
-  background: linear-gradient(180deg, #2f77b9 0%, #1d5f98 100%);
-  color: #ffffff;
+  background: transparent;
+  color: #1d417d;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -419,22 +426,23 @@
   line-height: 1;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 8px 14px rgba(24, 74, 120, 0.26);
-  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: none;
+  transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .consentStartButton:hover:not(:disabled) {
-  filter: brightness(1.04);
+  border-color: #25447f;
+  background: rgba(47, 79, 143, 0.12);
+  color: #13376a;
   transform: translateY(-1px);
-  box-shadow: 0 10px 18px rgba(18, 63, 104, 0.3);
 }
 
 .consentStartButton:disabled {
-  opacity: 1;
+  opacity: 0.6;
   cursor: not-allowed;
-  background: linear-gradient(180deg, #dbe5f0 0%, #cfd9e6 100%);
-  border-color: #bcc9d9;
-  color: #768aa4;
+  background: transparent;
+  border-color: #d8dde6;
+  color: #90a0b6;
   box-shadow: none;
 }
 

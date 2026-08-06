@@ -24,6 +24,10 @@ export function CarSelector({ destination, options, hasPets, onSelect, disabled 
       <div className={styles.grid}>
         {options.map((car) => (
           <article key={car.id} className={styles.card}>
+            <div className={styles.hero}>
+              <img src={car.imageSrc} alt={car.imageAlt} className={styles.heroPhoto} />
+            </div>
+
             <div className={styles.tags}>
               {car.tags.map((tag) => (
                 <Badge key={tag} appearance="filled" color="informative" size="small">
@@ -32,21 +36,23 @@ export function CarSelector({ destination, options, hasPets, onSelect, disabled 
               ))}
             </div>
 
-            <Body1Strong className={styles.name}>{car.name}</Body1Strong>
-            <Caption1 className={styles.category}>{car.category}</Caption1>
+            <Body1Strong className={styles.name}>{car.name.replace(/\s*o\s+similar\b/gi, "").trim()}</Body1Strong>
+            <Caption1 className={styles.carDescription}>{`${car.category} · ${car.transmission} · ${car.fuel}`}</Caption1>
+            <Caption1 className={styles.category}>{`Entrega en ${destination}`}</Caption1>
 
             <div className={styles.meta}>
               <span><People20Regular /> {car.seats} plazas</span>
-              <span><VehicleCarProfile20Regular /> {car.transmission}</span>
-              <span><VehicleCarProfile20Regular /> {car.fuel}</span>
+              <span><VehicleCarProfile20Regular /> {car.luggage} maletas</span>
             </div>
 
             <Caption1 className={styles.detail}>Maletas: {car.luggage} · {car.petFriendly && hasPets ? "Apto mascota" : "Sin kit mascota"}</Caption1>
 
             <div className={styles.footer}>
               <div>
-                <Caption1 className={styles.priceLabel}>Desde</Caption1>
-                <span className={styles.price}>{car.pricePerDayEur} EUR/dia</span>
+                <div className={styles.priceRow}>
+                  <Caption1 className={styles.priceLabel}>Desde</Caption1>
+                  <span className={styles.price}>{car.pricePerDayEur} EUR/dia</span>
+                </div>
               </div>
               <Button
                 appearance="primary"

@@ -2,6 +2,9 @@ import type { Activity } from "botframework-directlinejs";
 import type { AgentToUiEvent } from "@/lib/agent/eventTypes";
 import {
   showDatePickerActivityValueSchema,
+  showFlightsActivityValueSchema,
+  showCarsActivityValueSchema,
+  showHotelsActivityValueSchema,
   showTravelPartySelectorActivityValueSchema,
   showCabinSelectorActivityValueSchema,
   showQuickOptionsActivityValueSchema,
@@ -123,6 +126,103 @@ export const mapDirectLineEventActivityToAgentEvent = (
         minDate: parsed.data.minDate,
         mode: parsed.data.mode,
       },
+    };
+  }
+
+  if (eventName === "ui.showFlights") {
+    const rawValue = parseActivityValue(activity.value);
+    if (rawValue === undefined) {
+      if (process.env.NODE_ENV === "development") console.warn("[directLineAdapters] ui.showFlights: no se pudo parsear value");
+      return null;
+    }
+
+    const parsed = showFlightsActivityValueSchema.safeParse(rawValue);
+    if (!parsed.success) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[directLineAdapters] ui.showFlights validation failed", {
+          value: JSON.stringify(rawValue),
+          issues: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
+        });
+      }
+      return null;
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("[directLineAdapters] ui.showFlights validated:", {
+        destination: parsed.data.destination,
+        fromDate: parsed.data.fromDate,
+        toDate: parsed.data.toDate,
+        flights: parsed.data.flights.length,
+      });
+    }
+
+    return {
+      type: "ui.showFlights",
+      payload: parsed.data,
+    };
+  }
+
+  if (eventName === "ui.showcars" || eventName === "ui.showCars") {
+    const rawValue = parseActivityValue(activity.value);
+    if (rawValue === undefined) {
+      if (process.env.NODE_ENV === "development") console.warn("[directLineAdapters] ui.showcars: no se pudo parsear value");
+      return null;
+    }
+
+    const parsed = showCarsActivityValueSchema.safeParse(rawValue);
+    if (!parsed.success) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[directLineAdapters] ui.showcars validation failed", {
+          value: JSON.stringify(rawValue),
+          issues: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
+        });
+      }
+      return null;
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("[directLineAdapters] ui.showcars validated:", {
+        destination: parsed.data.destination,
+        days: parsed.data.days,
+        cars: parsed.data.cars.length,
+      });
+    }
+
+    return {
+      type: "ui.showCars",
+      payload: parsed.data,
+    };
+  }
+
+  if (eventName === "ui.showhotels" || eventName === "ui.showHotels") {
+    const rawValue = parseActivityValue(activity.value);
+    if (rawValue === undefined) {
+      if (process.env.NODE_ENV === "development") console.warn("[directLineAdapters] ui.showhotels: no se pudo parsear value");
+      return null;
+    }
+
+    const parsed = showHotelsActivityValueSchema.safeParse(rawValue);
+    if (!parsed.success) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[directLineAdapters] ui.showhotels validation failed", {
+          value: JSON.stringify(rawValue),
+          issues: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
+        });
+      }
+      return null;
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("[directLineAdapters] ui.showhotels validated:", {
+        destination: parsed.data.destination,
+        nights: parsed.data.nights,
+        hotels: parsed.data.hotels.length,
+      });
+    }
+
+    return {
+      type: "ui.showHotels",
+      payload: parsed.data,
     };
   }
 

@@ -18,6 +18,18 @@ import { romeFlights } from "@/lib/mocks";
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const formatDate = (isoDate: string) => isoDate;
+const DEMO_NEXT_FERRY_DATE = "2026-08-31";
+
+const parseDestinationFromMessage = (text: string): string => {
+  const normalized = text.trim();
+  const match = normalized.match(/\ba\s+([\p{L}\s]+?)(?:\s+el\s+|\.|,|$)/iu);
+  const destination = match?.[1]?.trim();
+  if (!destination) {
+    return "Ibiza";
+  }
+
+  return destination.charAt(0).toUpperCase() + destination.slice(1).toLowerCase();
+};
 
 export class MockAgentTransport implements AgentTransport {
   private listeners = new Set<AgentEventListener>();
@@ -43,32 +55,28 @@ export class MockAgentTransport implements AgentTransport {
       throw new Error("Transport is not connected.");
     }
 
-    const normalized = text.toLowerCase();
-    if (normalized.includes("roma")) {
-      await delay(250);
-      this.emit({
-        type: "ui.showMessage",
-        payload: {
-          text: "Perfecto, Roma suena muy bien. Ahora elige tus fechas.",
-        },
-      });
-      await delay(250);
-      this.emit({
-        type: "ui.showDatePicker",
-        payload: {
-          destination: "Roma",
-          hint: "Selecciona fecha de ida y vuelta",
-        },
-      });
-      return;
-    }
+    const destination = parseDestinationFromMessage(text);
+    this.pendingFlights = [...romeFlights];
 
+    await delay(250);
     this.emit({
       type: "ui.showMessage",
       payload: {
-        text: "Puedo ayudarte con destinos como Roma. Prueba: Quiero viajar a Roma.",
+        text: `Perfecto. El proximo ferry disponible para ${destination} es el ${DEMO_NEXT_FERRY_DATE}. Te muestro opciones ahora mismo.`,
       },
     });
+
+    await delay(250);
+    this.emit({
+      type: "ui.showFlights",
+      payload: {
+        destination,
+        fromDate: DEMO_NEXT_FERRY_DATE,
+        toDate: DEMO_NEXT_FERRY_DATE,
+        flights: this.pendingFlights,
+      },
+    });
+    return;
   }
 
   async sendEvent(event: UiToAgentEvent): Promise<void> {

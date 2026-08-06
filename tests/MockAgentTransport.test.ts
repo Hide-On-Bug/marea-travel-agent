@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MockAgentTransport } from "@/lib/agent/MockAgentTransport";
 
 describe("MockAgentTransport", () => {
-  it("emits date picker after message about Rome", async () => {
+  it("emits flights directly after user message", async () => {
     vi.useFakeTimers();
     const transport = new MockAgentTransport();
     const events: string[] = [];
@@ -16,7 +16,7 @@ describe("MockAgentTransport", () => {
     await vi.runAllTimersAsync();
     await sendPromise;
 
-    expect(events).toContain("ui.showDatePicker");
+    expect(events).toContain("ui.showFlights");
     vi.useRealTimers();
   });
 

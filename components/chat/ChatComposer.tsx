@@ -51,11 +51,10 @@ export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
         icon={<Send24Regular />}
         onClick={handleSend}
         disabled={disabled}
+        aria-label="Enviar mensaje"
         className={styles.sendButton}
         style={{ gridColumn: "2 / 3", gridRow: "2", alignSelf: "end" }}
-      >
-        Enviar
-      </Button>
+      />
     </div>
   );
 }
