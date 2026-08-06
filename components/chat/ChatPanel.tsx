@@ -27,7 +27,7 @@ const starterPrompts = [
 
 function MareaWaveIcon() {
   return (
-    <img src="/ola-icon.png" alt="" role="presentation" aria-hidden="true" />
+    <img src="/ola-icon-transparent.png" alt="" role="presentation" aria-hidden="true" />
   );
 }
 

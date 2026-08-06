@@ -1280,7 +1280,7 @@ export default function Home() {
           <div className={styles.headerBoat} aria-hidden="true" />
           <div className={styles.headerBrand}>
             <span className={styles.headerLogo} aria-hidden="true">
-              <Image src="/ola-icon.png" alt="" width={32} height={32} priority={false} />
+              <Image src="/ola-icon-transparent.png" alt="" width={32} height={32} priority={false} />
             </span>
             <div>
               <Text className={styles.headerTitle}>Marea</Text>
