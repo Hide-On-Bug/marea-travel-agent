@@ -399,6 +399,16 @@ export class DirectLineTransport implements AgentTransport {
       return;
     }
 
+    if (process.env.NODE_ENV === "development" && activity.type === "message") {
+      console.log("[DirectLineTransport] Message activity received", {
+        id: activity.id,
+        fromRole: activity.from?.role,
+        fromId: activity.from?.id,
+        text: activity.text,
+        channelData: activity.channelData,
+      });
+    }
+
     // Actividades de tipo "message"
     const mappedEvent = mapDirectLineActivityToAgentEvent(activity);
     if (!mappedEvent) {
@@ -416,6 +426,14 @@ export class DirectLineTransport implements AgentTransport {
     }
 
     const safeEvent = parsedEvent.data;
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("[DirectLineTransport] Message mapped to event", {
+        eventType: safeEvent.type,
+        text: safeEvent.type === "ui.showMessage" ? safeEvent.payload.text : undefined,
+      });
+    }
+
     this.listeners.forEach((listener) => listener(safeEvent));
   }
 

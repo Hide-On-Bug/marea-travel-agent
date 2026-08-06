@@ -106,6 +106,53 @@ const parseNightsFromLabel = (value: string): number => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 3;
 };
 
+const ROUTE_DURATIONS: Record<string, string> = {
+  "barcelona|palma de mallorca": "7 h",
+  "barcelona|ibiza": "8 h 30 min",
+  "valencia|palma de mallorca": "8 h",
+  "valencia|ibiza": "6 h 45 min",
+};
+
+const ROUTE_BASE_FARES_EUR: Record<string, number> = {
+  "barcelona|palma de mallorca": 20,
+  "barcelona|ibiza": 25,
+  "valencia|palma de mallorca": 20,
+  "valencia|ibiza": 20,
+};
+
+const normalizeRouteCity = (value: string): string => {
+  const compact = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+  if (compact === "palma" || compact === "mallorca" || compact === "palma de mallorca") {
+    return "palma de mallorca";
+  }
+
+  if (compact === "eivissa") {
+    return "ibiza";
+  }
+
+  return compact;
+};
+
+const getRouteDuration = (origin: string, destination: string): string | null => {
+  const from = normalizeRouteCity(origin);
+  const to = normalizeRouteCity(destination);
+
+  return ROUTE_DURATIONS[`${from}|${to}`] ?? ROUTE_DURATIONS[`${to}|${from}`] ?? null;
+};
+
+const getRouteBaseFareEur = (origin: string, destination: string): number | null => {
+  const from = normalizeRouteCity(origin);
+  const to = normalizeRouteCity(destination);
+
+  return ROUTE_BASE_FARES_EUR[`${from}|${to}`] ?? ROUTE_BASE_FARES_EUR[`${to}|${from}`] ?? null;
+};
+
 const inferPassengersFromPrompt = (text: string): number | null => {
   const normalized = text.toLowerCase();
 
@@ -128,12 +175,74 @@ const inferPassengersFromPrompt = (text: string): number | null => {
   return null;
 };
 
-const normalizeAgentPetFriendlyText = (text: string, hasPets: boolean): string => {
-  if (hasPets) {
-    return text;
+const normalizePlaceName = (value: string): string => {
+  const compact = value.replace(/\s+/g, " ").trim();
+  if (!compact) return compact;
+
+  const ascii = compact
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  if (ascii === "palma" || ascii === "mallorca" || ascii === "palma de mallorca") {
+    return "Palma de Mallorca";
   }
 
+  return compact
+    .split(" ")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const inferRouteFromPrompt = (text: string): { origin: string; destination: string } | null => {
+  const normalized = text.trim();
+  const routeMatch = normalized.match(/\bde\s+([\p{L}\s]+?)\s+a\s+([\p{L}\s]+?)(?:\s+el\s+|\.|,|;|:|\?|!|$)/iu);
+  if (!routeMatch) {
+    return null;
+  }
+
+  const origin = normalizePlaceName(routeMatch[1]);
+  const destination = normalizePlaceName(routeMatch[2]);
+
+  if (!origin || !destination) {
+    return null;
+  }
+
+  return { origin, destination };
+};
+
+const normalizeAgentBrandText = (text: string): string => {
+  return text.replace(/\b(?:nauta|anuta)\b/giu, "Marea");
+};
+
+const normalizeAgentMarkdownArtifacts = (text: string): string => {
+  return text
+    // Remove markdown heading markers that arrive inline as plain text.
+    .replace(/(^|\s)#{2,6}(?=\s+)/g, "$1")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+};
+
+const shouldSuppressAgentMessage = (text: string): boolean => {
+  const normalized = text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+  return (
+    normalized.includes("todo listo para revisar")
+    || normalized.includes("ya esta todo preparado")
+    || normalized.includes("aqui tienes el selector con las opciones disponibles para tu ruta")
+    || normalized.includes("elige la travesia que mas te guste")
+  );
+};
+
+const normalizeAgentPetFriendlyText = (text: string, hasPets: boolean): string => {
   const normalizedText = text.replace(/�/g, "").trim();
+
+  if (hasPets) {
+    return normalizedText;
+  }
+
   const sentenceParts = normalizedText.match(/[^.!?]+[.!?]?/g) ?? [normalizedText];
   const filteredParts = sentenceParts.filter((part) => !/pet\s*friendly/i.test(part));
 
@@ -232,10 +341,11 @@ const formatEur = (value: number): string => new Intl.NumberFormat("es-ES", {
 export default function Home() {
   const transportRef = useRef<AgentTransport | null>(null);
   const busyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const originRef = useRef("");
   const destinationRef = useRef("");
+  const requestedRouteRef = useRef<{ origin: string; destination: string } | null>(null);
   const hasPetsRef = useRef(false);
   const hasCompletedPaymentRef = useRef(false);
-  const awaitingPostCabinUpsellRef = useRef(false);
   const bookingMemoryRef = useRef<BookingMemory>(createEmptyBookingMemory());
   const [messages, setMessages] = useState<ChatMessageModel[]>([]);
   const [isBusy, setIsBusy] = useState(false);
@@ -373,6 +483,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    originRef.current = origin;
+  }, [origin]);
+
+  useEffect(() => {
     destinationRef.current = destination;
   }, [destination]);
 
@@ -397,15 +511,13 @@ export default function Home() {
       releaseBusy();
 
       if (event.type === "ui.showMessage") {
-        const normalizedText = normalizeAgentPetFriendlyText(event.payload.text, hasPetsRef.current);
-        appendMessage(createMessage("agent", normalizedText));
-
-        if (awaitingPostCabinUpsellRef.current) {
-          const destinationLabel = destinationRef.current || "tu destino";
-          setQuickOptions(buildPostCabinQuickOptions(destinationLabel));
-          setQuickOptionsFlowMode("upsell-primary");
-          awaitingPostCabinUpsellRef.current = false;
+        const brandedText = normalizeAgentBrandText(event.payload.text);
+        const markdownCleanText = normalizeAgentMarkdownArtifacts(brandedText);
+        const normalizedText = normalizeAgentPetFriendlyText(markdownCleanText, hasPetsRef.current);
+        if (shouldSuppressAgentMessage(normalizedText)) {
+          return;
         }
+        appendMessage(createMessage("agent", normalizedText));
       }
 
       if (event.type === "ui.showQuickOptions") {
@@ -441,7 +553,32 @@ export default function Home() {
         if (hasCompletedPaymentRef.current) {
           return;
         }
-        setFlights(event.payload.flights);
+
+        const requestedRoute = requestedRouteRef.current;
+        const routeOrigin = requestedRoute?.origin || originRef.current || event.payload.flights[0]?.origin || "";
+        const routeDestination = requestedRoute?.destination || destinationRef.current || event.payload.destination;
+
+        const hydratedFlights = event.payload.flights.map((flight, index) => {
+          const hydratedOrigin = routeOrigin || flight.origin;
+          const hydratedDestination = routeDestination || flight.destination;
+          const dynamicDuration = getRouteDuration(hydratedOrigin, hydratedDestination);
+          const routeBaseFareEur = getRouteBaseFareEur(hydratedOrigin, hydratedDestination);
+          const dynamicPriceEur = routeBaseFareEur !== null
+            ? routeBaseFareEur + (index * 5)
+            : flight.priceEur;
+
+          return {
+            ...flight,
+            origin: hydratedOrigin,
+            destination: hydratedDestination,
+            duration: dynamicDuration ?? flight.duration,
+            priceEur: dynamicPriceEur,
+          };
+        });
+
+        setOrigin(routeOrigin || originRef.current);
+        setDestination(routeDestination || destinationRef.current);
+        setFlights(hydratedFlights);
         setNextAvailableFerryDate(event.payload.fromDate);
         setShowDatePicker(false);
         setPanelLoading(false);
@@ -449,8 +586,8 @@ export default function Home() {
           ...current,
           trip: {
             ...current.trip,
-            origin: origin || current.trip.origin,
-            destination: event.payload.destination,
+            origin: routeOrigin || current.trip.origin,
+            destination: routeDestination || event.payload.destination,
             fromDate: event.payload.fromDate,
             toDate: event.payload.toDate,
           },
@@ -608,6 +745,21 @@ export default function Home() {
       updateBookingMemory((current) => ({
         ...current,
         passengers: inferredPassengers,
+      }));
+    }
+
+    const inferredRoute = inferRouteFromPrompt(text);
+    if (inferredRoute) {
+      requestedRouteRef.current = inferredRoute;
+      setOrigin(inferredRoute.origin);
+      setDestination(inferredRoute.destination);
+      updateBookingMemory((current) => ({
+        ...current,
+        trip: {
+          ...current.trip,
+          origin: inferredRoute.origin,
+          destination: inferredRoute.destination,
+        },
       }));
     }
 
@@ -808,7 +960,14 @@ export default function Home() {
 
       setSentCabinSelectionId(selectedCabinId);
       setShowCabinSelector(false);
-      awaitingPostCabinUpsellRef.current = true;
+      setShowCarSelector(false);
+      setShowHotelSelector(false);
+      setShowHotelCarSelector(false);
+      setShowCheckoutPrompt(false);
+      setShowBudgetSummary(false);
+      setBudgetSnapshot(null);
+      setQuickOptions(buildPostCabinQuickOptions(destinationRef.current || "tu destino"));
+      setQuickOptionsFlowMode("upsell-primary");
     } catch {
       setPanelError("No se pudo enviar la seleccion del camarote. Intentalo de nuevo.");
       appendMessage(
@@ -923,6 +1082,9 @@ export default function Home() {
         setQuickOptions(null);
         setQuickOptionsFlowMode(null);
         appendMessage(createMessage("agent", "👌 Perfecto. Continuamos con tu reserva de ferry."));
+        setShowCheckoutPrompt(true);
+        setShowBudgetSummary(false);
+        setBudgetSnapshot(null);
         return;
       }
 
@@ -1280,7 +1442,7 @@ export default function Home() {
           <div className={styles.headerBoat} aria-hidden="true" />
           <div className={styles.headerBrand}>
             <span className={styles.headerLogo} aria-hidden="true">
-              <Image src="/ola-icon-transparent.png" alt="" width={32} height={32} priority={false} />
+              <Image src="/wave-svgrepo-com.svg" alt="" width={32} height={32} priority={false} />
             </span>
             <div>
               <Text className={styles.headerTitle}>Marea</Text>

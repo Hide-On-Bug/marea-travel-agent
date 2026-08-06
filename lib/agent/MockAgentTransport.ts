@@ -45,7 +45,7 @@ export class MockAgentTransport implements AgentTransport {
     this.emit({
       type: "ui.showMessage",
       payload: {
-        text: "Hola. Soy tu Nauta de viajes. Cuéntame tu próximo destino.",
+        text: "Hola. Soy Marea, tu asistente de viajes. Cuéntame tu próximo destino.",
       },
     });
   }
